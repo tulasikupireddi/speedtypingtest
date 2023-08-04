@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<style>
+    .container {
+    margin-top:10%;
+    background-color: #478be4;
+    height: auto;
+}
+
+.cardContainer {
+    background-color: #d0c4e0;
+    height: auto;
+    width: auto;
+    padding: 20px;
+    border-radius: 20px;
+    border: 2px solid #9aa5b1;
+}
+
+h1 {
+    color: #690cb0;
+}
+
+#submitBtn {
+    background-color: #0f0f13;
+    color: white;
+}
+
+#resetBtn {
+    background-color: #0f0f13;
+    color: azure;
+}
+
+
+span {
+    font-size: 16px;
+}
+
+#timer {
+    font-size: 40px;
+}
+
+
+</style>
+</head>
+<body>
+
+    <div class="container p-3">
+        <div class="row">
+            <div id="speedTypingTest" class="col-12">
+                <h1>Welcome To Typing Speed Test</h1>
+                
+
+                <div class="d-flex flex-row">
+                   
+                    <p id="timer">0</p>
+                    <p class=" ml-2 mt-4">seconds</p>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="cardContainer">
+                    <p id="quoteDisplay"></p>
+                    <textarea placeholder="Type Here" class="form-control" id="quoteInput" rows="5" cols="20"></textarea>
+                </div>
+               <!-- <div class="text-center text-light mt-3">
+                    <div id="spinner" class="d-none spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>-->
+                <p id="result"></p>
+                <div class="text-center">
+                    <button class="btn" id="submitBtn" type="submit">Submit</button>
+                    <button class="btn ml-2" id="resetBtn" type="submit">Reset</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+let timer = document.getElementById("timer");
+let quoteDisplay = document.getElementById("quoteDisplay");
+let result = document.getElementById("result");
+let quoteInput = document.getElementById("quoteInput");
+let submitBtn = document.getElementById("submitBtn");
+let resetBtn = document.getElementById("resetBtn");
+//let spinner = document.getElementById("spinner");
+let counter = 0;
+//spinner.classList.toggle("d-none");
+
+function startCounter() {
+    counter += 1;
+    timer.textContent = counter;
+    
+}
+let counterValue = setInterval(startCounter, 1000);
+
+function getQuote() {
+    let options = {
+        method: "GET"
+    };
+    fetch("https://apis.ccbp.in/random-quote", options)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(jsonData) {
+           // spinner.classList.add("d-none");
+
+            let quote = jsonData.content;
+            quoteDisplay.textContent = quote;
+            console.log(jsonData.content);
+        });
+}
+getQuote();
+startCounter();
+resetBtn.onclick = function() {
+   // spinner.classList.remove("d-none");
+    getQuote();
+    startCounter();
+    counter = 0;
+    result.textContent = "";
+    quoteInput.value = "";
+};
+submitBtn.onclick = function() {
+    if (quoteInput.value === quoteDisplay.textContent) {
+       
+        result.textContent = "You Typed in " + counter + " seconds";
+        clearInterval(counterValue);
+    } else {
+        result.textContent = "You typed Incorrect Sentence";
+        clearInterval(counterValue);
+    }
+};
+    </script>
+
+</body>
+</html>
